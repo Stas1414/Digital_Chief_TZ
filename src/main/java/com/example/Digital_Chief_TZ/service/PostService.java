@@ -1,0 +1,13 @@
+package com.example.Digital_Chief_TZ.service;
+
+import com.example.Digital_Chief_TZ.model.Post;
+
+import java.util.List;
+
+public interface PostService {
+
+    List<Post> getAllPosts();
+    void addPost(Long user_id,String text);
+    void updatePost(Long id,Post postDetails);
+    void deletePost(Long id);
+}

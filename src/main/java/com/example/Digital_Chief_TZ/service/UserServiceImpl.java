@@ -1,5 +1,6 @@
 package com.example.Digital_Chief_TZ.service;
 
+import com.example.Digital_Chief_TZ.model.Post;
 import com.example.Digital_Chief_TZ.model.User;
 import com.example.Digital_Chief_TZ.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public User showUser(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
     @Transactional
     public void addUser(String username, String email) {
         User user = new User();
@@ -39,11 +45,25 @@ public class UserServiceImpl implements UserService{
             user.setEmail(userDetails.getEmail());
             userRepository.save(user);
         }
+        else{
+            throw new NullPointerException();
+        }
     }
 
     @Override
     @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Post> showUsersPost(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if(user != null){
+            return user.getPosts();
+        }
+        else {
+            throw new NullPointerException();
+        }
     }
 }
