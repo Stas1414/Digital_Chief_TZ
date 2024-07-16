@@ -29,10 +29,10 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public void addUser(String username, String email) {
+    public void addUser(User userDetails) {
         User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
+        user.setUsername(userDetails.getUsername());
+        user.setEmail(userDetails.getEmail());
         userRepository.save(user);
     }
 
