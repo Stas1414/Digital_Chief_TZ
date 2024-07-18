@@ -25,6 +25,11 @@ public class PostController {
         return ResponseEntity.ok(postService.getAllPosts());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<PostDto> getPostById(@PathVariable("id") Long id){
+        return ResponseEntity.ok(postService.getPostById(id));
+    }
+
     @PostMapping("/{users_id}")
     public ResponseEntity<Void> createNewPost(@RequestBody Post postDetails, @PathVariable ("users_id") Long users_id){
         postService.addPost(users_id,postDetails.getText());

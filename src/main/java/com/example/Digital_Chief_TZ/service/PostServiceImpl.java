@@ -30,6 +30,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public PostDto getPostById(Long id) {
+        Post post = postRepository.findById(id).orElse(null);
+        if(post != null){
+            return mappingPost.mapToPostDto(post);
+        }
+        else {
+            throw new NullPointerException();
+        }
+    }
+
+    @Override
     public List<PostDto> getAllPosts() {
          List<Post> posts = postRepository.findAll();
          List<PostDto> finalPosts = new ArrayList<>();
