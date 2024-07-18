@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
 
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService{
     public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
         List<UserDto> finalUsers = new ArrayList<>();
-        for(User user : users){
+        for (User user : users) {
             finalUsers.add(mappingUser.mapToUserDto(user));
         }
         return finalUsers;
@@ -40,13 +40,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDto showUser(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        if(user != null){
-            return mappingUser.mapToUserDto(user);
-        }
-        else {
-            throw new NullPointerException();
-        }
+        User user = userRepository.findById(id).orElseThrow(() -> new NullPointerException("the entity was not found"));
+        return mappingUser.mapToUserDto(user);
+
     }
 
     @Override
@@ -60,16 +56,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public void updateUser(Long id,User userDetails) {
-        User user = userRepository.findById(id).orElse(null);
-        if(user != null){
-            user.setUsername(userDetails.getUsername());
-            user.setEmail(userDetails.getEmail());
-            userRepository.save(user);
-        }
-        else{
-            throw new NullPointerException();
-        }
+    public void updateUser(Long id, User userDetails) {
+        User user = userRepository.findById(id).orElseThrow(() -> new NullPointerException("the entity was not found"));
+        user.setUsername(userDetails.getUsername());
+        user.setEmail(userDetails.getEmail());
+        userRepository.save(user);
     }
 
     @Override
@@ -80,17 +71,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<PostDto> showUsersPost(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        if(user != null){
-            List<Post> usersPost = user.getPosts();
-            List<PostDto> finalPosts = new ArrayList<>();
-            for(Post post : usersPost){
-                finalPosts.add(mappingPost.mapToPostDto(post));
-            }
-            return finalPosts;
+        User user = userRepository.findById(id).orElseThrow(() -> new NullPointerException("the entity was not found"));
+        List<Post> usersPost = user.getPosts();
+        List<PostDto> finalPosts = new ArrayList<>();
+        for (Post post : usersPost) {
+            finalPosts.add(mappingPost.mapToPostDto(post));
         }
-        else {
-            throw new NullPointerException();
-        }
+        return finalPosts;
     }
 }

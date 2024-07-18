@@ -31,23 +31,18 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto getPostById(Long id) {
-        Post post = postRepository.findById(id).orElse(null);
-        if(post != null){
-            return mappingPost.mapToPostDto(post);
-        }
-        else {
-            throw new NullPointerException();
-        }
+        Post post = postRepository.findById(id).orElseThrow(() -> new NullPointerException("the object was not found"));
+        return mappingPost.mapToPostDto(post);
     }
 
     @Override
     public List<PostDto> getAllPosts() {
-         List<Post> posts = postRepository.findAll();
-         List<PostDto> finalPosts = new ArrayList<>();
-         for(Post post : posts){
-             finalPosts.add(mappingPost.mapToPostDto(post));
-         }
-         return finalPosts;
+        List<Post> posts = postRepository.findAll();
+        List<PostDto> finalPosts = new ArrayList<>();
+        for (Post post : posts) {
+            finalPosts.add(mappingPost.mapToPostDto(post));
+        }
+        return finalPosts;
     }
 
     @Override
@@ -62,13 +57,8 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void updatePost(Long id, Post postDetails) {
-        Post post = postRepository.findById(id).orElse(null);
-        if(post != null){
-            post.setText(postDetails.getText());
-        }
-        else {
-            throw new NullPointerException();
-        }
+        Post post = postRepository.findById(id).orElseThrow(() -> new NullPointerException("the object was not found"));
+        post.setText(postDetails.getText());
     }
 
     @Override
