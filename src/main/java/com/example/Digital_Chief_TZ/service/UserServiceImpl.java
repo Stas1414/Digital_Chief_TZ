@@ -1,11 +1,16 @@
 package com.example.Digital_Chief_TZ.service;
 
+import com.example.Digital_Chief_TZ.dto.PostDto;
+import com.example.Digital_Chief_TZ.dto.UserDto;
+import com.example.Digital_Chief_TZ.mapping.MappingPost;
+import com.example.Digital_Chief_TZ.mapping.MappingUser;
 import com.example.Digital_Chief_TZ.model.Post;
 import com.example.Digital_Chief_TZ.model.User;
 import com.example.Digital_Chief_TZ.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -13,18 +18,35 @@ public class UserServiceImpl implements UserService{
 
     private UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    private MappingUser mappingUser;
+
+    private MappingPost mappingPost;
+
+    public UserServiceImpl(UserRepository userRepository, MappingUser mappingUser, MappingPost mappingPost) {
         this.userRepository = userRepository;
+        this.mappingUser = mappingUser;
+        this.mappingPost = mappingPost;
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDto> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        List<UserDto> finalUsers = new ArrayList<>();
+        for(User user : users){
+            finalUsers.add(mappingUser.mapToUserDto(user));
+        }
+        return finalUsers;
     }
 
     @Override
-    public User showUser(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public UserDto showUser(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if(user != null){
+            return mappingUser.mapToUserDto(user);
+        }
+        else {
+            throw new NullPointerException();
+        }
     }
 
     @Override
@@ -57,10 +79,15 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public List<Post> showUsersPost(Long id) {
+    public List<PostDto> showUsersPost(Long id) {
         User user = userRepository.findById(id).orElse(null);
         if(user != null){
-            return user.getPosts();
+            List<Post> usersPost = user.getPosts();
+            List<PostDto> finalPosts = new ArrayList<>();
+            for(Post post : usersPost){
+                finalPosts.add(mappingPost.mapToPostDto(post));
+            }
+            return finalPosts;
         }
         else {
             throw new NullPointerException();

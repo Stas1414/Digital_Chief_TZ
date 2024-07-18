@@ -1,6 +1,8 @@
 package com.example.Digital_Chief_TZ.controller;
 
 
+import com.example.Digital_Chief_TZ.dto.PostDto;
+import com.example.Digital_Chief_TZ.dto.UserDto;
 import com.example.Digital_Chief_TZ.model.Post;
 import com.example.Digital_Chief_TZ.model.User;
 import com.example.Digital_Chief_TZ.service.UserServiceImpl;
@@ -22,28 +24,28 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<UserDto>> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<Post>> getUsersPost(@PathVariable("id") Long id){
+    public ResponseEntity<List<PostDto>> getUsersPost(@PathVariable("id") Long id){
         return ResponseEntity.ok(userService.showUsersPost(id));
     }
 
-    @PostMapping("/new")
+    @PostMapping
     public ResponseEntity<Void> createUser(@RequestBody User userDetails){
         userService.addUser(userDetails);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Void> updateUser(@PathVariable("id") Long id,@RequestBody User userDetails){
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateUser(@PathVariable("id") Long id, @RequestBody User userDetails){
         userService.updateUser(id,userDetails);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id){
         userService.deleteUser(id);
         return ResponseEntity.noContent().build();

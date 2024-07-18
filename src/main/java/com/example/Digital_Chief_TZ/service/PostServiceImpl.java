@@ -1,6 +1,8 @@
 package com.example.Digital_Chief_TZ.service;
 
 
+import com.example.Digital_Chief_TZ.dto.PostDto;
+import com.example.Digital_Chief_TZ.mapping.MappingPost;
 import com.example.Digital_Chief_TZ.model.Post;
 import com.example.Digital_Chief_TZ.repository.PostRepository;
 import com.example.Digital_Chief_TZ.repository.UserRepository;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -17,15 +20,23 @@ public class PostServiceImpl implements PostService {
 
     private UserRepository userRepository;
 
+    private MappingPost mappingPost;
+
     @Autowired
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, MappingPost mappingPost) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.mappingPost = mappingPost;
     }
 
     @Override
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public List<PostDto> getAllPosts() {
+         List<Post> posts = postRepository.findAll();
+         List<PostDto> finalPosts = new ArrayList<>();
+         for(Post post : posts){
+             finalPosts.add(mappingPost.mapToPostDto(post));
+         }
+         return finalPosts;
     }
 
     @Override
